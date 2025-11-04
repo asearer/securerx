@@ -2,24 +2,30 @@
 FROM rust:1.73 AS builder
 WORKDIR /usr/src/securerx
 
-# Copy manifests for dependency caching (workspace + all members)
+# Copy workspace manifest for caching
 COPY Cargo.toml Cargo.lock ./
-COPY crates/securerx-core/Cargo.toml crates/securerx-core/
-COPY crates/securerx-node/Cargo.toml crates/securerx-node/
-COPY crates/securerx-api/Cargo.toml crates/securerx-api/
-COPY crates/securerx-cli/Cargo.toml crates/securerx-cli/
 
-# Create minimal src trees to satisfy target discovery during cargo fetch
-RUN mkdir -p crates/securerx-core/src \
-    && mkdir -p crates/securerx-node/src \
-    && mkdir -p crates/securerx-api/src \
-    && mkdir -p crates/securerx-cli/src \
-    && cargo fetch
+# Copy only crate manifests first to cache dependencies
+# This dynamically copies all Cargo.toml files in crates/
+RUN for crate in crates/*; do \
+        if [ -f "$crate/Cargo.toml" ]; then \
+            mkdir -p "$crate"; \
+            cp "$crate/Cargo.toml" "$crate/"; \
+        fi; \
+    done
 
-# Copy full source
-COPY . .
+# Copy full source of all crates
+RUN for crate in crates/*; do \
+        if [ -d "$crate/src" ]; then \
+            mkdir -p "$crate/src"; \
+            cp -r "$crate/src" "$crate/src"; \
+        fi; \
+    done
 
-# Build the node binary
+# Fetch dependencies for all workspace members
+RUN cargo fetch
+
+# Build the main node binary
 RUN cargo build --release --package securerx-node
 
 # ===== Runtime Stage =====
@@ -35,3 +41,4 @@ EXPOSE 8081 9090
 
 # Default command
 CMD ["./securerx-node"]
+
