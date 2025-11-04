@@ -191,7 +191,7 @@ securerx/
 Clone the repo:
 
 ```bash
-git clone https://github.com/yourorg/securerx.git
+git clone https://github.com/asearer/securerx.git
 cd securerx
 ````
 
