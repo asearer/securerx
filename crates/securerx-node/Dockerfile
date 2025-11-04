@@ -6,6 +6,10 @@ WORKDIR /usr/src/securerx
 COPY Cargo.toml Cargo.lock ./
 COPY crates/securerx-core/Cargo.toml crates/securerx-core/
 COPY crates/securerx-node/Cargo.toml crates/securerx-node/
+
+# Ensure library source exists for cargo fetch
+COPY crates/securerx-core/src ./crates/securerx-core/src
+
 RUN cargo fetch
 
 # Copy full source
@@ -27,4 +31,3 @@ EXPOSE 8081 9090
 
 # Default command
 CMD ["./securerx-node"]
-
