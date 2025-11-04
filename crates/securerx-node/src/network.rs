@@ -3,7 +3,7 @@ use std::time::Duration;
 use tokio::time::sleep;
 use reqwest::Client;
 
-/// P2P gossip: periodically sync blocks with peers
+/// P2P gossip: periodically sync blocks with peers using http for internal testing
 impl Node {
     pub async fn gossip_loop(&self) {
         let client = Client::new();
