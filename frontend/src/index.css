@@ -1,5 +1,101 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
-/* Custom styles can go here */
+body { background: #f4f6f8; color: #333; }
+
+header {
+  background: #0d6efd;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+nav button {
+  background: #f4f6f8;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+nav button:hover, nav button.active {
+  background: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section { display: none; }
+
+section.active { display: block; }
+
+h2 { margin-bottom: 1rem; }
+
+.card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th { background: #f4f6f8; }
+
+.form-group { margin-bottom: 1rem; }
+
+.form-group label { display: block; margin-bottom: 0.25rem; }
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button.submit {
+  background: #0d6efd;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.submit:hover { background: #0b5ed7; }
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  color: #777;
+  font-size: 0.9rem;
+  border-top: 1px solid #ddd;
+  margin-top: 2rem;
+}

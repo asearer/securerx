@@ -1,27 +1,35 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import React, { useState } from 'react';
+import Header from './components/Header';
+import Overview from './pages/Overview';
 import Transactions from './pages/Transactions';
 import Nodes from './pages/Nodes';
-import Header from './components/Header';
+import SubmitPrescription from './pages/SubmitPrescription';
 
 /**
- * App component – sets up routes for the frontend GUI
+ * App component – main application with tab-based navigation
  */
 function App() {
+  const [activeTab, setActiveTab] = useState('overview');
+
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100">
-        <Header />
-        <main className="p-6">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/nodes" element={<Nodes />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div>
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <main>
+        <section id="overview" className={activeTab === 'overview' ? 'active' : ''}>
+          <Overview />
+        </section>
+        <section id="transactions" className={activeTab === 'transactions' ? 'active' : ''}>
+          <Transactions />
+        </section>
+        <section id="nodes" className={activeTab === 'nodes' ? 'active' : ''}>
+          <Nodes />
+        </section>
+        <section id="submit" className={activeTab === 'submit' ? 'active' : ''}>
+          <SubmitPrescription />
+        </section>
+      </main>
+      <footer>&copy; 2025 SecureRx</footer>
+    </div>
   );
 }
 

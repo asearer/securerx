@@ -1,19 +1,43 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 /**
- * Header component with navigation
+ * Header component with navigation buttons
  */
-function Header() {
+function Header({ activeTab, setActiveTab }) {
   return (
-    <header className="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold">SecureRx Dashboard</h1>
-      <nav className="space-x-4">
-        <Link className="hover:underline" to="/">Home</Link>
-        <Link className="hover:underline" to="/transactions">Transactions</Link>
-        <Link className="hover:underline" to="/nodes">Nodes</Link>
+    <>
+      <header>SecureRx Dashboard</header>
+      <nav>
+        <button 
+          className={activeTab === 'overview' ? 'active' : ''}
+          onClick={() => setActiveTab('overview')}
+          data-target="overview"
+        >
+          Overview
+        </button>
+        <button 
+          className={activeTab === 'transactions' ? 'active' : ''}
+          onClick={() => setActiveTab('transactions')}
+          data-target="transactions"
+        >
+          Transactions
+        </button>
+        <button 
+          className={activeTab === 'nodes' ? 'active' : ''}
+          onClick={() => setActiveTab('nodes')}
+          data-target="nodes"
+        >
+          Nodes
+        </button>
+        <button 
+          className={activeTab === 'submit' ? 'active' : ''}
+          onClick={() => setActiveTab('submit')}
+          data-target="submit"
+        >
+          Submit Prescription
+        </button>
       </nav>
-    </header>
+    </>
   );
 }
 
