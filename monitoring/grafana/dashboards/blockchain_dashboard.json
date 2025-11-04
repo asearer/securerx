@@ -1,0 +1,20 @@
+{
+    "title": "Blockchain Metrics",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Chain Height",
+        "targets": [
+          { "expr": "chain_height", "legendFormat": "{{instance}}" }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Transactions Processed",
+        "targets": [
+          { "expr": "transactions_processed_total", "legendFormat": "{{instance}}" }
+        ]
+      }
+    ]
+  }
+  

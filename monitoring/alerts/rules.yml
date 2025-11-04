@@ -1,0 +1,20 @@
+groups:
+  - name: blockchain_alerts
+    rules:
+      - alert: ChainHeightLow
+        expr: chain_height < 1
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Blockchain height too low"
+          description: "One or more nodes may be offline or not syncing"
+
+      - alert: NodeDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node is down"
+          description: "Node is not responding to Prometheus scrape"

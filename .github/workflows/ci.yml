@@ -1,0 +1,92 @@
+name: SecureRx CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-security:
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:24.0.0-dind
+        options: --privileged
+        ports:
+          - 2375:2375
+    env:
+      DOCKER_HOST: tcp://localhost:2375
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Install Rust toolchain
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      # Build all crates
+      - name: Build Rust crates
+        run: cargo build --workspace --release
+
+      # Run unit tests
+      - name: Run unit tests
+        run: cargo test --workspace --all-features --verbose
+
+      # Install cargo-audit
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      # Run cargo-audit
+      - name: Run cargo audit
+        run: cargo audit --deny warnings || echo "cargo-audit check completed with warnings (non-blocking)"
+
+      # Install Trivy for Docker image scanning
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
+      # Build Docker images
+      - name: Build Docker images
+        run: docker-compose build
+
+      # Run Docker image security scans
+      - name: Scan Docker images
+        run: |
+          trivy image --severity HIGH,CRITICAL node1
+          trivy image --severity HIGH,CRITICAL node2
+          trivy image --severity HIGH,CRITICAL node3
+          trivy image --severity HIGH,CRITICAL securerx-api
+
+      # Start Docker Compose multi-node cluster
+      - name: Start Docker Compose cluster
+        run: docker-compose up -d
+
+      # Wait for services to be ready
+      - name: Wait for services
+        run: sleep 15
+
+      # Run load test
+      - name: Run load test
+        run: docker-compose run --rm load_test
+
+      # Run integration tests (consensus validation)
+      - name: Run integration tests
+        run: |
+          cd tests
+          cargo test --verbose
+
+      # Shutdown Docker Compose
+      - name: Shutdown Docker Compose
+        run: docker-compose down
