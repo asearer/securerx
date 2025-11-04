@@ -1,12 +1,20 @@
 # ===== Build Stage =====
-FROM rust:1.73 as builder
+FROM rust:1.73 AS builder
 WORKDIR /usr/src/securerx
 
-# Copy manifests for dependency caching
+# Copy manifests for dependency caching (workspace + all members)
 COPY Cargo.toml Cargo.lock ./
 COPY crates/securerx-core/Cargo.toml crates/securerx-core/
+COPY crates/securerx-node/Cargo.toml crates/securerx-node/
 COPY crates/securerx-api/Cargo.toml crates/securerx-api/
-RUN cargo fetch
+COPY crates/securerx-cli/Cargo.toml crates/securerx-cli/
+
+# Create minimal src trees to satisfy target discovery during cargo fetch
+RUN mkdir -p crates/securerx-core/src \
+    && mkdir -p crates/securerx-node/src \
+    && mkdir -p crates/securerx-api/src \
+    && mkdir -p crates/securerx-cli/src \
+    && cargo fetch
 
 # Copy full source
 COPY . .
