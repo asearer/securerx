@@ -5,7 +5,7 @@ services:
   node1:
     build:
       context: .
-      dockerfile: ./crates/securerx-node/Dockerfile
+      dockerfile: Dockerfile  # root-level Dockerfile
     container_name: node1
     environment:
       NODE_ID: node1
@@ -28,7 +28,7 @@ services:
   node2:
     build:
       context: .
-      dockerfile: ./crates/securerx-node/Dockerfile
+      dockerfile: Dockerfile
     container_name: node2
     environment:
       NODE_ID: node2
@@ -51,7 +51,7 @@ services:
   node3:
     build:
       context: .
-      dockerfile: ./crates/securerx-node/Dockerfile
+      dockerfile: Dockerfile
     container_name: node3
     environment:
       NODE_ID: node3
@@ -75,7 +75,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./crates/securerx-api/Dockerfile
+      dockerfile: Dockerfile
     container_name: securerx-api
     environment:
       NODE_URL: http://node1:8081
